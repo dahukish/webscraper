@@ -4,42 +4,52 @@ use WebScrape\WebScrape;
 
 class WebScrapeTest extends WebScrapeTestCase 
 {
-	public function testCanInstantiateClass() 
+	public function setUp()
 	{
-		$webScraper = new WebScrape(['http:://www.google.com']);
-		$this->assertTrue($webScraper instanceof WebScrape);
-	}
-
-	public function testCanPassContructorListOfPagesAsAnArrayWithOneItem()
-	{
-		$args = [
+		$this->webScraper = new WebScrape;
+		
+		$this->singleArgsArray = [
 			'http://www.stephen-hukish.com/portfolio',
 		];
 		
-		$webScraper = new WebScrape($args);
-		$this->assertEquals(count($args), count($webScraper));
-
-	}
-
-	public function testCanPassContructorListOfPagesAsAnArrayWithMutlipleItems()
-	{
-		$args = [
+		$this->multiArgsArray = [
 			'http://www.stephen-hukish.com/portfolio',
 			'http://www.stephen-hukish.com/portfolio',
 			'http://www.stephen-hukish.com/portfolio',
 			'http://www.stephen-hukish.com/portfolio',
 		];
 		
-		$webScraper = new WebScrape($args);
-		$this->assertEquals(count($args), count($webScraper));
+		$this->emptyArgsArray = [];
+	}
 
+	public function tearDown()
+	{
+		
+	}
+
+	public function testCanPassSetLinksListOfPagesAsAnArrayWithOneItem()
+	{
+		$this->webScraper->setLinks($this->singleArgsArray);
+		$this->assertEquals(count($this->singleArgsArray), count($this->webScraper));
+	}
+
+	public function testCanPassSetLinksListOfPagesAsAnArrayWithMutlipleItems()
+	{
+		$this->webScraper->setLinks($this->multiArgsArray);
+		$this->assertEquals(count($this->multiArgsArray), count($this->webScraper));
 	}
 
 	/**
 	 * @expectedException \WebScrape\Exception\EmptyConstructorArrayException
 	 */
-	public function testThatWhenGivenAnEmptyErrorTheClassThrowsAnError()
+	public function testThatWhenGivenAnEmptyArraySetLinkTheClassThrowsAnError()
 	{
-		$webScraper = new WebScrape([]);
+		$this->webScraper->setLinks($this->emptyArgsArray);
 	}
+
+	public function testCanScrapeContentsOfLinksSetInLinkCollection()
+	{
+
+	}
+
 }
