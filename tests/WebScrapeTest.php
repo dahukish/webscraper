@@ -59,9 +59,9 @@ class WebScrapeTest extends WebScrapeTestCase
 		$this->webScraper->setLinks($this->singleArgsArray);
 		$expectedHtml = $this->getSampleHtml();
 		
-		$responseBody = $this->webScraper->scrape();
+		$reponseBodyCollection = $this->webScraper->scrape();
 		
-		$this->assertEquals($expectedHtml, $responseBody[0]);
+		$this->assertEquals($expectedHtml, $reponseBodyCollection[0]);
 	}
 
 	
@@ -82,11 +82,11 @@ class WebScrapeTest extends WebScrapeTestCase
 							$this->getSampleHtml('about'),
 							$this->getSampleHtml('contact')	];
 		
-		$responseBodyMulti = $this->webScraper->scrape();
+		$responseBodyCollection = $this->webScraper->scrape();
 
-		$this->assertEquals($expectedHtml[0], $responseBodyMulti[0]);
-		$this->assertEquals($expectedHtml[1], $responseBodyMulti[1]);
-		$this->assertEquals($expectedHtml[2], $responseBodyMulti[2]);
+		$this->assertEquals($expectedHtml[0], $responseBodyCollection[0]);
+		$this->assertEquals($expectedHtml[1], $responseBodyCollection[1]);
+		$this->assertEquals($expectedHtml[2], $responseBodyCollection[2]);
 	}
 
 	/**
@@ -116,11 +116,11 @@ class WebScrapeTest extends WebScrapeTestCase
 							$this->getSampleHtml('about'),
 							$this->getSampleHtml('contact')	];
 		
-		$responseBodyMulti = $this->webScraper->scrape();
+		$responseBodyCollection = $this->webScraper->scrape();
 
-		$this->assertEquals($expectedHtml[0], $responseBodyMulti[0]);
-		// $this->assertEquals($expectedHtml[1], $responseBodyMulti[1]);
-		$this->assertEquals($expectedHtml[2], $responseBodyMulti[2]);
+		$this->assertEquals($expectedHtml[0], $responseBodyCollection[0]);
+		// $this->assertEquals($expectedHtml[1], $responseBodyCollection[1]);
+		$this->assertEquals($expectedHtml[2], $responseBodyCollection[2]);
 	}
 
 	public function testCanParseHtmlBodyWithStrippedTags()
@@ -139,9 +139,9 @@ class WebScrapeTest extends WebScrapeTestCase
 		preg_match_all('#<\s*?body\s*?>(.*)<\/\s*?body\s*?>#is', $this->getSampleHtml(), $expectedHtmlMatches);
 		$sampleBodyNoTags = strip_tags($expectedHtmlMatches[1][0]);
 
-		$responseBodyNoTags = $this->webScraper->scrape(['filter' => 'noTags']);
+		$responseBodyCollectionNoTags = $this->webScraper->scrape(['filter' => 'noTags']);
 
-		$this->assertEquals($sampleBodyNoTags, $responseBodyNoTags[0]);
+		$this->assertEquals($sampleBodyNoTags, $responseBodyCollectionNoTags[0]);
 	}
 	
 	public function testCanUseOnlyToSelectCertainUrlsBeScraped()
@@ -168,9 +168,13 @@ class WebScrapeTest extends WebScrapeTestCase
 				$samples[2]['url']
 		]);
 		
-		$responseBodyNoTags = $this->webScraper
-		                      ->only([$samples[1]['url']])
-		                      ->scrape(['filter' => 'noTags']);
+		$reponseBodyCollection = $this->webScraper
+		                      ->only([$samples[0]['url']])
+		                      ->scrape();
+		
+		$this->assertEquals(1, count($reponseBodyCollection));
+		$this->assertEquals($this->getSampleHtml(), $reponseBodyCollection[0]);
+
 	}
 	
 	public function getSampleHtml($page="portfolio") 
